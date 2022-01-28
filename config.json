@@ -1,7 +1,25 @@
 {
-  "name": "Aluracord - Matrix (bartoszzdev)",
+  "wallpaperTheme": "",
   "theme": {
     "colors": {
+      "themes": {
+        "grayTheme": {
+          "wallpaper": "https://cdn.wallpapersafari.com/64/39/1wvt85.png",
+          "buttonColor": "#8e9c9c"
+        },
+        "blueTheme": {
+          "wallpaper": "https://t.tudocdn.net/321151",
+          "buttonColor": "#1a2ac9"
+        },
+        "purpleTheme": {
+          "wallpaper": "https://cdn.wccftech.com/wp-content/uploads/2018/01/download-galaxy-s9-wallpaper-e1517955772388-2060x1132.jpeg",
+          "buttonColor": "#6d29cc"
+        },
+        "redTheme": {
+          "wallpaper": "https://cdn.wallpapersafari.com/20/91/ws4SBr.png",
+          "buttonColor": "#851732"
+        }
+      },
       "primary": {
         "050": "#E3F9E5",
         "100": "#C1EAC5",

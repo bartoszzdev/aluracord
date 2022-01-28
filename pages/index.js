@@ -3,40 +3,6 @@ import { useRouter } from 'next/router'
 import { Box, Button, Text, TextField, Image } from '@skynexui/components'
 import appConfig from '../config.json'
 
-function GlobalStyle() {
-  return (
-    <style global jsx>{`
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        list-style: none;
-      }
-
-      body {
-        font-family: 'Mukta', sans-serif;
-        position: relative
-      }
-
-      /* App fit Height */ 
-      html, body, #__next {
-        min-height: 100vh;
-        display: flex;
-        flex: 1;
-      }
-
-      #__next {
-        flex: 1;
-      }
-
-      #__next > * {
-        flex: 1;
-      }
-      /* ./App fit Height */ 
-    `}</style>
-  )
-}
-
 function Title(props) {
   const { tag, children } = props
   const Tag = tag || 'h1'
@@ -73,17 +39,17 @@ export default HomePage */
 
 export default function PaginaInicial() {
   const [username, setUsername] = useState('bartoszzdev')
+  const [wallpaper, setWallpaper] = useState(appConfig.theme.colors.themes.grayTheme.wallpaper)
+  const [buttonColor, setButtonColor] = useState(appConfig.theme.colors.themes.grayTheme.buttonColor)
   const router = useRouter()
 
   return (
     <>
-      <GlobalStyle />
       <Title tag="h2">Aluracord</Title>
       <Box
         styleSheet={{
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          /* backgroundColor: appConfig.theme.colors.primary[500], */
-          backgroundImage: 'url(https://cdn.wallpapersafari.com/64/39/1wvt85.png)',
+          backgroundImage: `url(${wallpaper})`,
           backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backgroundBlendMode: 'multiply',
         }}
       >
@@ -142,7 +108,7 @@ export default function PaginaInicial() {
                 neutral: {
                   textColor: appConfig.theme.colors.neutrals[200],
                   mainColor: appConfig.theme.colors.neutrals[900],
-                  mainColorHighlight: appConfig.theme.colors.primary[500],
+                  mainColorHighlight: `${buttonColor}` /* appConfig.theme.colors.primary[500] */,
                   backgroundColor: appConfig.theme.colors.neutrals[800],
                 },
               }}
@@ -151,11 +117,12 @@ export default function PaginaInicial() {
               type='submit'
               label='Entrar'
               fullWidth
+              styleSheet={{boxShadow: '0 5px 10px 0 rgb(0 0 0 / 40%)'}}
               buttonColors={{
                 contrastColor: appConfig.theme.colors.neutrals["000"],
-                mainColor:  appConfig.theme.colors.primary[500],
+                mainColor: `${buttonColor}` /* appConfig.theme.colors.primary[600] */,
                 mainColorLight: appConfig.theme.colors.primary[400],
-                mainColorStrong: appConfig.theme.colors.primary[600],
+                mainColorStrong: appConfig.theme.colors.primary[500],
               }}
             />
           </Box>
@@ -182,6 +149,7 @@ export default function PaginaInicial() {
               styleSheet={{
                 borderRadius: '7px',
                 marginBottom: '20px',
+                border: '1px solid #fff',
                 boxShadow: '0 2px 10px 0 rgb(0 0 0 / 20%)'
               }}
               src={`https://github.com/${username}.png`}
@@ -203,6 +171,110 @@ export default function PaginaInicial() {
           {/* Photo Area */}
         </Box>
       </Box>
+
+      <Themes wallpaper={setWallpaper} buttonColor={setButtonColor}/>
     </>
   );
+}
+
+function Themes(props) {
+  const { wallpaper, buttonColor } = props
+
+  return (
+    <>
+      <Box 
+        styleSheet={{
+          width: '268px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          padding: '10px 0',
+          position: 'absolute',
+          bottom: '0',
+          left: '50%',
+          transform: 'translate(-50%)'
+        }}>
+
+        <Text 
+          variant="body2" 
+          styleSheet={{
+            fontWeight: 'bold',
+            marginBottom: '15px', 
+            color: appConfig.theme.colors.neutrals['000'] 
+          }}>
+          Temas:
+        </Text>
+
+        <Box>
+          <Button
+            onClick={() => {
+              wallpaper(appConfig.theme.colors.themes.grayTheme.wallpaper)
+              buttonColor(appConfig.theme.colors.themes.grayTheme.buttonColor)
+              appConfig.wallpaperTheme = appConfig.theme.colors.themes.grayTheme.wallpaper
+            }}
+            styleSheet={{
+              width: '45px',
+              height: '45px',
+              borderRadius: '7px',
+              margin: '0 10px',
+              border: '1px solid #fff',
+              backgroundImage: `url(${appConfig.theme.colors.themes.grayTheme.wallpaper})`,
+              backgroundSize: 'cover',
+            }}
+          />
+
+          <Button
+            onClick={() => {
+              wallpaper(appConfig.theme.colors.themes.blueTheme.wallpaper)
+              buttonColor(appConfig.theme.colors.themes.blueTheme.buttonColor)
+              appConfig.wallpaperTheme = appConfig.theme.colors.themes.blueTheme.wallpaper
+            }}
+            styleSheet={{
+              width: '45px',
+              height: '45px',
+              borderRadius: '7px',
+              margin: '0 10px',
+              border: '1px solid #fff',
+              backgroundImage: `url(${appConfig.theme.colors.themes.blueTheme.wallpaper})`,
+              backgroundSize: 'cover',
+            }}
+          />
+
+          <Button
+            onClick={() => {
+              wallpaper(appConfig.theme.colors.themes.purpleTheme.wallpaper)
+              buttonColor(appConfig.theme.colors.themes.purpleTheme.buttonColor)
+              appConfig.wallpaperTheme = appConfig.theme.colors.themes.purpleTheme.wallpaper
+            }}
+            styleSheet={{
+              width: '45px',
+              height: '45px',
+              borderRadius: '7px',
+              margin: '0 10px',
+              border: '1px solid #fff',
+              backgroundImage: `url(${appConfig.theme.colors.themes.purpleTheme.wallpaper})`,
+              backgroundSize: 'cover',
+            }}
+          />
+
+          <Button
+            onClick={() => {
+              wallpaper(appConfig.theme.colors.themes.redTheme.wallpaper)
+              buttonColor(appConfig.theme.colors.themes.redTheme.buttonColor)
+              appConfig.wallpaperTheme = appConfig.theme.colors.themes.redTheme.wallpaper
+            }}
+            styleSheet={{
+              width: '45px',
+              height: '45px',
+              borderRadius: '7px',
+              margin: '0 10px',
+              border: '1px solid #fff',
+              backgroundImage: `url(${appConfig.theme.colors.themes.redTheme.wallpaper})`,
+              backgroundSize: 'cover',
+            }}
+          />
+        </Box>
+      </Box>
+    </>
+  )
 }
