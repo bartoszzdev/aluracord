@@ -38,8 +38,8 @@ function Title(props) {
 export default HomePage */
 
 export default function PaginaInicial() {
-  const [username, setUsername] = useState('bartoszzdev')
-  const [wallpaper, setWallpaper] = useState(appConfig.theme.colors.themes.grayTheme.wallpaper)
+  const [username, setUsername] = useState('')
+  const [wallpaper, setWallpaper] = useState(appConfig.wallpaperTheme || appConfig.theme.colors.themes.grayTheme.wallpaper)
   const [buttonColor, setButtonColor] = useState(appConfig.theme.colors.themes.grayTheme.buttonColor)
   const router = useRouter()
 
@@ -103,6 +103,7 @@ export default function PaginaInicial() {
                 //atribuindo o novo valor
                 setUsername(newUsername)
               }}
+              placeholder='Digite seu usuário do github...'
               fullWidth
               textFieldColors={{
                 neutral: {
@@ -117,7 +118,7 @@ export default function PaginaInicial() {
               type='submit'
               label='Entrar'
               fullWidth
-              styleSheet={{boxShadow: '0 5px 10px 0 rgb(0 0 0 / 40%)'}}
+              styleSheet={{ boxShadow: '0 5px 10px 0 rgb(0 0 0 / 40%)' }}
               buttonColors={{
                 contrastColor: appConfig.theme.colors.neutrals["000"],
                 mainColor: `${buttonColor}` /* appConfig.theme.colors.primary[600] */,
@@ -143,14 +144,30 @@ export default function PaginaInicial() {
               borderRadius: '10px', */
               flex: 1,
               minHeight: '240px',
+              position: 'relative'
             }}
           >
+            <Box 
+              styleSheet={{
+                width: '166px',
+                height: '166px',
+                backgroundColor: 'rgba(225, 222, 222, 0.13)',
+                boxShadow: '0 2px 10px 0 rgb(0 0 0 / 20%)',
+                borderRadius: '7px',
+                border: '1px solid #fff',
+                position: 'absolute',
+                top: '15px'
+              }}
+            />
+
             <Image
               styleSheet={{
+                height: '164px',
                 borderRadius: '7px',
                 marginBottom: '20px',
-                border: '1px solid #fff',
-                boxShadow: '0 2px 10px 0 rgb(0 0 0 / 20%)'
+                /* border: '1px solid #fff', */
+                boxShadow: '0 2px 10px 0 rgb(0 0 0 / 20%)',
+                zIndex: '1'
               }}
               src={`https://github.com/${username}.png`}
             />
@@ -172,7 +189,7 @@ export default function PaginaInicial() {
         </Box>
       </Box>
 
-      <Themes wallpaper={setWallpaper} buttonColor={setButtonColor}/>
+      <Themes wallpaper={setWallpaper} buttonColor={setButtonColor} />
     </>
   );
 }
@@ -182,7 +199,7 @@ function Themes(props) {
 
   return (
     <>
-      <Box 
+      <Box
         styleSheet={{
           width: '268px',
           display: 'flex',
@@ -195,12 +212,16 @@ function Themes(props) {
           transform: 'translate(-50%)'
         }}>
 
-        <Text 
-          variant="body2" 
+        <Text
+          variant="body2"
           styleSheet={{
             fontWeight: 'bold',
-            marginBottom: '15px', 
-            color: appConfig.theme.colors.neutrals['000'] 
+            marginBottom: '10px',
+            color: appConfig.theme.colors.neutrals['000'],
+            display: {
+              xs: 'none',
+              sm: 'inline-block'
+            }
           }}>
           Temas:
         </Text>

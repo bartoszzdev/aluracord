@@ -24,18 +24,19 @@ export default function ChatPage() {
             text: newMessage,
         }
 
-        setMessageList([
-            currentMessage,
-            ...messageList
-        ])
-        setMessage('')
+        if (currentMessage.text.length > 0) {
+            setMessageList([
+                currentMessage,
+                ...messageList
+            ])
+            setMessage('')
+        }
     }
 
     return (
         <Box
             styleSheet={{
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                backgroundColor: appConfig.theme.colors.primary[500],
                 backgroundImage: `url(${appConfig.wallpaperTheme || appConfig.theme.colors.themes.grayTheme.wallpaper})`,
                 backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backgroundBlendMode: 'multiply',
                 color: appConfig.theme.colors.neutrals['000']
@@ -62,14 +63,15 @@ export default function ChatPage() {
                         display: 'flex',
                         flex: 1,
                         height: '80%',
-                        backgroundColor: appConfig.theme.colors.neutrals[600],
+                        backgroundColor: 'rgba(0,0,0, 0.545)'/* appConfig.theme.colors.neutrals[600] */,
+                        boxShadow: '0 2px 10px 0 rgb(0 0 0 / 20%)',
                         flexDirection: 'column',
                         borderRadius: '5px',
                         padding: '16px',
                     }}
                 >
 
-                    <MessageList messages={messageList} />
+                    <MessageList messages={messageList} setMessageList={setMessageList} />
 
                     {/* {messageList.map(message => {
                         return (
@@ -113,6 +115,21 @@ export default function ChatPage() {
                                 color: appConfig.theme.colors.neutrals[200],
                             }}
                         />
+                        <Button
+                            onClick={() => {
+                                handleNewMessage(message)
+                            }}
+                            variant='tertiary'
+                            colorVariant='neutral'
+                            label='Enviar'
+                            styleSheet={{
+                                padding: '12px 10px',
+                                marginBottom: '10px',
+                                color: appConfig.theme.colors.neutrals['000'],
+                                border: `1px solid #fff`,
+                                /* backgroundColor: appConfig.theme.colors.themes.blueTheme.buttonColor */
+                            }}
+                        />
                     </Box>
                 </Box>
             </Box>
@@ -139,13 +156,13 @@ function Header() {
 }
 
 function MessageList(props) {
-    console.log('MessageList', props)
+    //console.log('MessageList', props)
 
     return (
         <Box
             tag="ul"
             styleSheet={{
-                overflow: 'scroll',
+                overflowY: 'auto',
                 display: 'flex',
                 flexDirection: 'column-reverse',
                 flex: 1,
@@ -154,10 +171,11 @@ function MessageList(props) {
             }}
         >
             {props.messages.map(message => {
-                console.log(message)
+                const { id, from, text } = message
+
                 return (
                     <Text
-                        key={message.id}
+                        key={id}
                         tag="li"
                         styleSheet={{
                             borderRadius: '5px',
@@ -171,33 +189,53 @@ function MessageList(props) {
                         <Box
                             styleSheet={{
                                 marginBottom: '8px',
+                                display: 'flex',
+                                justifyContent: 'space-between'
                             }}
                         >
-                            <Image
-                                styleSheet={{
-                                    width: '20px',
-                                    height: '20px',
-                                    borderRadius: '50%',
-                                    display: 'inline-block',
-                                    marginRight: '8px',
+                            <Box>
+                                <Image
+                                    styleSheet={{
+                                        width: '20px',
+                                        height: '20px',
+                                        borderRadius: '50%',
+                                        display: 'inline-block',
+                                        marginRight: '8px',
+                                    }}
+                                    src={`https://github.com/vanessametonini.png`}
+                                />
+                                <Text tag="strong">
+                                    {from}
+                                </Text>
+                                <Text
+                                    styleSheet={{
+                                        fontSize: '10px',
+                                        marginLeft: '8px',
+                                        color: appConfig.theme.colors.neutrals[300],
+                                    }}
+                                    tag="span"
+                                >
+                                    {(new Date().toLocaleDateString())}
+                                </Text>
+                            </Box>
+
+                            <Button
+                                id={text + id}
+                                onClick={(event) => {
+                                    const deletedMessage = event.currentTarget.id
+                                    const newMessageList = props.messages.filter(message => message.text + message.id !== deletedMessage)
+                                    props.setMessageList(newMessageList)
                                 }}
-                                src={`https://github.com/vanessametonini.png`}
+                                variant='tertiary'
+                                colorVariant='negative'
+                                label='X'
+                                styleSheet={{
+                                    fontWeight: 'bold',
+                                    color: appConfig.theme.colors.neutrals['000'],
+                                }}
                             />
-                            <Text tag="strong">
-                                {message.from}
-                            </Text>
-                            <Text
-                                styleSheet={{
-                                    fontSize: '10px',
-                                    marginLeft: '8px',
-                                    color: appConfig.theme.colors.neutrals[300],
-                                }}
-                                tag="span"
-                            >
-                                {(new Date().toLocaleDateString())}
-                            </Text>
                         </Box>
-                        {message.text}
+                        {text}
                     </Text>
                 )
             })}
