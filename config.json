@@ -9,15 +9,15 @@
         },
         "blueTheme": {
           "wallpaper": "https://t.tudocdn.net/321151",
-          "buttonColor": "#1a2ac9"
+          "buttonColor": "#1b42a6"
         },
         "purpleTheme": {
           "wallpaper": "https://cdn.wccftech.com/wp-content/uploads/2018/01/download-galaxy-s9-wallpaper-e1517955772388-2060x1132.jpeg",
-          "buttonColor": "#6d29cc"
+          "buttonColor": "#553494"
         },
         "redTheme": {
           "wallpaper": "https://cdn.wallpapersafari.com/20/91/ws4SBr.png",
-          "buttonColor": "#851732"
+          "buttonColor": "#5c1b42"
         }
       },
       "primary": {

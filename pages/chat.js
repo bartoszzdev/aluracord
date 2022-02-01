@@ -1,10 +1,52 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useRouter } from 'next/router'
 import { Box, Text, TextField, Image, Button } from '@skynexui/components'
 import appConfig from '../config.json'
+import { createClient } from '@supabase/supabase-js'
+import { ButtonSendSticker } from '../src/components/ButtonSendSticker'
+
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzQ3Mjc2NSwiZXhwIjoxOTU5MDQ4NzY1fQ.xBXAfO6trt3rT-NVvSJvqxZ_yooT6hlrmnFHrBxD6DY'
+const SUPABASE_URL = 'https://pfmwndnqbdjosrwidsxj.supabase.co'
+const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+function listenMessagesRealtime() {
+    return supabaseClient
+        .from('Message List')
+        .on('INSERT', (resposta) => {
+            //console.log(resposta.new)
+            console.log('Houve uma nova mensagem', resposta)
+            //addNewMessage(resposta.new)
+        })
+        .subscribe()
+}
 
 export default function ChatPage() {
     const [message, setMessage] = useState('')
     const [messageList, setMessageList] = useState([])
+    const router = useRouter()
+    const loggedUser = router.query.username
+
+    useEffect(() => {
+        supabaseClient
+            .from('Message List')
+            .select('*')
+            .order('id', { ascending: false })
+            .then(({ data }) => {
+                //console.log(data)
+                setMessageList(data)
+            })
+
+            listenMessagesRealtime()
+
+        /* listenMessagesRealtime((newMessage) => {
+            setMessageList((newList) => {
+                return [
+                    newMessage,
+                    ...newList
+                ]
+            })
+        }) */
+    }, [])
 
     /*
     User:
@@ -19,16 +61,25 @@ export default function ChatPage() {
 
     const handleNewMessage = (newMessage) => {
         const currentMessage = {
-            id: messageList.length + 1,
-            from: 'vanessametanini',
-            text: newMessage,
+            //id: messageList.length + 1,
+            from: loggedUser,
+            text: newMessage
         }
 
         if (currentMessage.text.length > 0) {
-            setMessageList([
-                currentMessage,
-                ...messageList
-            ])
+            supabaseClient
+                .from('Message List')
+                .insert([
+                    currentMessage
+                ])
+                .then(({ data }) => {
+                    //console.log(data)
+                    setMessageList([
+                        data[0],
+                        ...messageList
+                    ])
+                })
+
             setMessage('')
         }
     }
@@ -72,7 +123,6 @@ export default function ChatPage() {
                 >
 
                     <MessageList messages={messageList} setMessageList={setMessageList} />
-
                     {/* {messageList.map(message => {
                         return (
                             <li key={message.id}>
@@ -115,12 +165,20 @@ export default function ChatPage() {
                                 color: appConfig.theme.colors.neutrals[200],
                             }}
                         />
+
+                        <ButtonSendSticker 
+                            onStickerClick={(sticker) => {
+                                //console.log('[USANDO O COMPONENTE] Salvando o sticker no banco:', sticker)
+                                handleNewMessage(':sticker: ' + sticker)
+                            }}
+                        />
+
                         <Button
                             onClick={() => {
                                 handleNewMessage(message)
                             }}
                             variant='tertiary'
-                            colorVariant='neutral'
+                            colorVariant='positive'
                             label='Enviar'
                             styleSheet={{
                                 padding: '12px 10px',
@@ -202,7 +260,7 @@ function MessageList(props) {
                                         display: 'inline-block',
                                         marginRight: '8px',
                                     }}
-                                    src={`https://github.com/vanessametonini.png`}
+                                    src={`https://github.com/${from}.png`}
                                 />
                                 <Text tag="strong">
                                     {from}
@@ -220,11 +278,18 @@ function MessageList(props) {
                             </Box>
 
                             <Button
-                                id={text + id}
+                                id={id}
                                 onClick={(event) => {
                                     const deletedMessage = event.currentTarget.id
-                                    const newMessageList = props.messages.filter(message => message.text + message.id !== deletedMessage)
-                                    props.setMessageList(newMessageList)
+
+                                    supabaseClient
+                                        .from('Message List')
+                                        .delete()
+                                        .match({ id: deletedMessage })
+                                        .then(({ data }) => {
+                                            const newData = props.messages.filter((message) => message.id !== data[0].id)
+                                            props.setMessageList(newData)
+                                        })
                                 }}
                                 variant='tertiary'
                                 colorVariant='negative'
@@ -235,7 +300,18 @@ function MessageList(props) {
                                 }}
                             />
                         </Box>
-                        {text}
+                        {/* Condicional ternária/declarativa */}
+                        {text.startsWith(':sticker:')
+                            ? (
+                                <Image 
+                                    src={text.replace(':sticker:', '')} 
+                                    styleSheet={{maxWidth: '25%', height: 'auto'}}
+                                />
+                            ) 
+                            : (
+                                text
+                            )
+                        }
                     </Text>
                 )
             })}
