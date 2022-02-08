@@ -34,7 +34,6 @@ function Title(props) {
     </div>
   )
 }
-
 export default HomePage */
 
 export default function PaginaInicial() {
@@ -73,7 +72,7 @@ export default function PaginaInicial() {
               // Maneira convencional
               //window.location.href = './chat'
               // Maneira usada com o next.js
-              router.push('./chat')
+              router.push(`./chat?username=${username}`)
             }}
             styleSheet={{
               display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
@@ -105,6 +104,7 @@ export default function PaginaInicial() {
               }}
               placeholder='Digite seu usuário do github...'
               fullWidth
+              required
               textFieldColors={{
                 neutral: {
                   textColor: appConfig.theme.colors.neutrals[200],
@@ -165,7 +165,6 @@ export default function PaginaInicial() {
                 height: '164px',
                 borderRadius: '7px',
                 marginBottom: '20px',
-                /* border: '1px solid #fff', */
                 boxShadow: '0 2px 10px 0 rgb(0 0 0 / 20%)',
                 zIndex: '1'
               }}
