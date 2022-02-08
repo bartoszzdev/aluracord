@@ -4,11 +4,10 @@ import { Box, Text, TextField, Image, Button } from '@skynexui/components'
 import appConfig from '../config.json'
 import { createClient } from '@supabase/supabase-js'
 import { ButtonSendSticker } from '../src/components/ButtonSendSticker'
-<<<<<<< HEAD
 
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzQ3Mjc2NSwiZXhwIjoxOTU5MDQ4NzY1fQ.xBXAfO6trt3rT-NVvSJvqxZ_yooT6hlrmnFHrBxD6DY';
-const SUPABASE_URL = 'https://pfmwndnqbdjosrwidsxj.supabase.co';
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzQ3Mjc2NSwiZXhwIjoxOTU5MDQ4NzY1fQ.xBXAfO6trt3rT-NVvSJvqxZ_yooT6hlrmnFHrBxD6DY'
+const SUPABASE_URL = 'https://pfmwndnqbdjosrwidsxj.supabase.co'
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
 function listenMessagesRealTime(addMessage) {
     return supabase
@@ -29,33 +28,6 @@ export default function ChatPage() {
     useEffect(() => {
         supabase
             .from('Message-list')
-=======
-
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzQ3Mjc2NSwiZXhwIjoxOTU5MDQ4NzY1fQ.xBXAfO6trt3rT-NVvSJvqxZ_yooT6hlrmnFHrBxD6DY'
-const SUPABASE_URL = 'https://pfmwndnqbdjosrwidsxj.supabase.co'
-const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-
-function listenMessagesRealtime() {
-    return supabaseClient
-        .from('Message List')
-        .on('INSERT', (resposta) => {
-            //console.log(resposta.new)
-            console.log('Houve uma nova mensagem', resposta)
-            //addNewMessage(resposta.new)
-        })
-        .subscribe()
-}
-
-export default function ChatPage() {
-    const [message, setMessage] = useState('')
-    const [messageList, setMessageList] = useState([])
-    const router = useRouter()
-    const loggedUser = router.query.username
-
-    useEffect(() => {
-        supabaseClient
-            .from('Message List')
->>>>>>> ce70025c26d6af4c1a717e28ae7274aa065076af
             .select('*')
             .order('id', { ascending: false })
             .then(({ data }) => {
@@ -63,7 +35,6 @@ export default function ChatPage() {
                 setMessageList(data)
             })
 
-<<<<<<< HEAD
         const subscription = listenMessagesRealTime((newMessage) => {
             //console.log('nova mensagem:', newMessage)
             //console.log('lista de mensagens:', messageList)
@@ -79,20 +50,7 @@ export default function ChatPage() {
         return () => {
             subscription.unsubscribe();
         }
-    }, []);
-=======
-            listenMessagesRealtime()
-
-        /* listenMessagesRealtime((newMessage) => {
-            setMessageList((newList) => {
-                return [
-                    newMessage,
-                    ...newList
-                ]
-            })
-        }) */
     }, [])
->>>>>>> ce70025c26d6af4c1a717e28ae7274aa065076af
 
     /*
     User:
@@ -106,16 +64,11 @@ export default function ChatPage() {
 
     const handleNewMessage = (newMessage) => {
         const currentMessage = {
-<<<<<<< HEAD
-=======
-            //id: messageList.length + 1,
->>>>>>> ce70025c26d6af4c1a717e28ae7274aa065076af
             from: loggedUser,
             text: newMessage
         }
 
         if (currentMessage.text.length > 0) {
-<<<<<<< HEAD
             supabase
                 .from('Message-list')
                 .insert([currentMessage])
@@ -125,19 +78,6 @@ export default function ChatPage() {
                         data[0],
                         ...messageList
                     ]) */
-=======
-            supabaseClient
-                .from('Message List')
-                .insert([
-                    currentMessage
-                ])
-                .then(({ data }) => {
-                    //console.log(data)
-                    setMessageList([
-                        data[0],
-                        ...messageList
-                    ])
->>>>>>> ce70025c26d6af4c1a717e28ae7274aa065076af
                 })
 
             setMessage('')
@@ -341,19 +281,7 @@ function MessageList(props) {
                                 id={id}
                                 onClick={(event) => {
                                     const deletedMessage = event.currentTarget.id
-<<<<<<< HEAD
                                     console.log(deletedMessage)
-=======
-
-                                    supabaseClient
-                                        .from('Message List')
-                                        .delete()
-                                        .match({ id: deletedMessage })
-                                        .then(({ data }) => {
-                                            const newData = props.messages.filter((message) => message.id !== data[0].id)
-                                            props.setMessageList(newData)
-                                        })
->>>>>>> ce70025c26d6af4c1a717e28ae7274aa065076af
                                 }}
                                 variant='tertiary'
                                 colorVariant='negative'
