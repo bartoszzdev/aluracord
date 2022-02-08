@@ -14,11 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "@skynexui/components": "^1.23.9",
-<<<<<<< HEAD
     "@supabase/supabase-js": "^1.30.0",
-=======
-    "@supabase/supabase-js": "^1.29.4",
->>>>>>> ce70025c26d6af4c1a717e28ae7274aa065076af
     "next": "^12.0.8",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
