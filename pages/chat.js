@@ -9,12 +9,17 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5v
 const SUPABASE_URL = 'https://pfmwndnqbdjosrwidsxj.supabase.co'
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
-function listenMessagesRealTime(addMessage) {
+function listenMessagesRealTime(addMessage, deleteMessage) {
     return supabase
         .from('Message-list')
-        .on('INSERT', (resposta) => {
+        .on('*', (resposta) => {
             //console.log('Houve uma nova mensagem', resposta)
-            addMessage(resposta.new)
+
+            resposta.eventType === 'INSERT' ? (
+                addMessage(resposta.new)
+            ) : (
+                deleteMessage(resposta.old)
+            )
         })
         .subscribe()
 }
@@ -45,6 +50,13 @@ export default function ChatPage() {
                     ...currentList,
                 ]
             })
+        },
+        (deletedMessage) => {
+            setMessageList((currentList) => {
+                const newList = currentList.filter(message => message.id !== deletedMessage.id)
+
+                return [...newList]
+            })
         })
 
         return () => {
@@ -72,13 +84,7 @@ export default function ChatPage() {
             supabase
                 .from('Message-list')
                 .insert([currentMessage])
-                .then(({ data }) => {
-                    console.log('criando mensagem:', data)
-                    /* setMessageList([
-                        data[0],
-                        ...messageList
-                    ]) */
-                })
+                .then(({ data }) => {})
 
             setMessage('')
         }
@@ -122,7 +128,7 @@ export default function ChatPage() {
                     }}
                 >
 
-                    <MessageList messages={messageList} setMessageList={setMessageList} />
+                    <MessageList messages={messageList} />
                     {/* {messageList.map(message => {
                         return (
                             <li key={message.id}>
@@ -281,7 +287,12 @@ function MessageList(props) {
                                 id={id}
                                 onClick={(event) => {
                                     const deletedMessage = event.currentTarget.id
-                                    console.log(deletedMessage)
+                                    
+                                    supabase
+                                        .from('Message-list')
+                                        .delete()
+                                        .match({ id: deletedMessage })
+                                        .then(({ data }) => {})
                                 }}
                                 variant='tertiary'
                                 colorVariant='negative'
@@ -292,6 +303,7 @@ function MessageList(props) {
                                 }}
                             />
                         </Box>
+
                         {/* Condicional ternária/declarativa */}
                         {text.startsWith(':sticker:')
                             ? (
