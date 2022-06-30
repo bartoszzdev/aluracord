@@ -4,9 +4,8 @@ import { Box, Text, TextField, Image, Button } from '@skynexui/components'
 import appConfig from '../config.json'
 import { createClient } from '@supabase/supabase-js'
 import { ButtonSendSticker } from '../src/components/ButtonSendSticker'
-import { SUPABASE_URL, SUPABASE_ANON_KEY } from '../supabase_key/supabase.js'
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
 
 function listenMessagesRealTime(addMessage, deleteMessage) {
     return supabase
